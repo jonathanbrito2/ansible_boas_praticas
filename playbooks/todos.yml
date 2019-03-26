@@ -1,0 +1,8 @@
+---
+
+- name: Executando as roles em todos os Servidores
+  hosts: todos
+  roles:
+    - ntp
+
+

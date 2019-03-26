@@ -1,0 +1,19 @@
+driftfile /var/lib/ntp/drift
+
+restrict default nomodify notrap nopeer noquery
+
+restrict 127.0.0.1
+
+restrict ::1
+
+server a.st1.ntp.br iburst
+
+server b.st1.ntp.br iburst
+
+server c.st1.ntp.br iburst
+
+includefile /etc/ntp/crypto/pw
+
+keys /etc/ntp/keys
+
+disable monitor

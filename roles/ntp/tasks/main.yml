@@ -1,0 +1,40 @@
+---
+# tasks file for ntp
+
+
+- name: Verificando a existencia do arquivo /var/lib/ntp/ntp.drift
+  command: test -f /var/lib/ntp/ntp.drift
+  register: result
+  ignore_errors: yes
+
+- name: O Arquivo não existe, vamos criar!
+  shell: mkdir -p /var/lib/ntp && touch /var/lib/ntp/ntp.drift
+  when: result.rc != 0  
+
+- name: Instalando Pacote NTP - Ubuntu/Debian
+  apt: name=ntp update_cache=yes state=present
+  when: ansible_distribution == "Ubuntu"
+
+- name: Configurando o arquivo ntp.conf Ubuntu
+  template:
+    src: /etc/ansible/roles/ntp/files/ntp_ubuntu.j2
+    dest: /etc/ntp.conf
+  when: ansible_distribution == "Ubuntu"
+
+- name: Instalando Pacote NTP - CentOS
+  yum: name=ntp state=present
+  when: ansible_distribution == "CentOS"
+
+- name: Configurando o arquivo ntp.conf CentOS
+  template:
+    src: /etc/ansible/roles/ntp/files/ntp_centos.j2
+    dest: /etc/ntp.conf
+  when: ansible_distribution == "CentOS"
+
+- name: Start Auto - CentOS
+  service: name=ntpd state=started enabled=yes
+  when: ansible_distribution == "CentOS"
+
+
+
+
